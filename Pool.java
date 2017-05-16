@@ -6,17 +6,21 @@ public class Pool{
 	private Chromosome Best;
 	private Chromosome SecBest;
 	private Thread[] threadPool;
+	private int chromosomeSize;
+	private long startTime;
 	
 	// config for the pool
 	private final int POOL_SIZE; // requires at least of 2 !!!
 	
 	// constructor that allows different size of pool
-	public Pool(int size) {
-		POOL_SIZE = size;
+	public Pool(int poolSize, int chromosomeSize) {
+		POOL_SIZE = poolSize;
+		this.chromosomeSize = chromosomeSize;
 		this.pool = new Chromosome[this.POOL_SIZE];
 		threadPool = new Thread[this.POOL_SIZE];
 		Best = null;
 		SecBest = null;
+		this.startTime = System.currentTimeMillis();
 	}
 	
 	public Chromosome getChromosome(int id){
@@ -27,26 +31,27 @@ public class Pool{
 		return this.pool;
 	}
 	
-	/* this method should be called the Pool Manager because the genes may change from case to case
+	/* this method should be called by the Pool Manager because the genes may change from case to case
 	* therefore you should change the logic of the genes object in the main class then pass it to the pool manager which
 	 will take care of the rest 
 	 @param boolean duplicate : states whether the solutions can have duplicated numbers TRUE if yes FALSE otherwise
 	 @param int size : states the size of the pool
+	 @param min and max, min and max value that the genes can have
 	 */
 	public void init(boolean duplicate, int size, int min, int max) {
 	 // create the random starting Chromosome. May the odds ever be in your favor.
 		for (int i = 0; i < this.POOL_SIZE; i++) {
 			this.pool[i] = new Chromosome(duplicate, size, min, max);
 		}
-		Chromosome best = this.pool[0];
-		Chromosome secondbest= this.pool[1];
+		this.Best = this.pool[0];
+		this.SecBest= this.pool[1];
 		for (int i = 2; i < this.POOL_SIZE; i++) {
-			if (this.pool[i].getFitness() > secondbest.getFitness()){
-				if(this.pool[i].getFitness() > best.getFitness()){
-					best = this.pool[i];
+			if (this.pool[i].getFitness() > this.SecBest.getFitness()){
+				if(this.pool[i].getFitness() > this.Best.getFitness()){
+					this.Best = this.pool[i];
 				}
 				else {
-					secondbest = this.pool[i];
+					this.SecBest = this.pool[i];
 				}
 			}
 		}
@@ -60,7 +65,38 @@ public class Pool{
 		for (int i = 0; i < this.POOL_SIZE; i++){
 			this.threadPool[i] = new Thread(new MyRunnable(i, this.getChromosome(i), this, duplicate, size, min, max));
 		}
-		
-		
+		for ( int i = 0; i < this.POOL_SIZE; i++) {
+			this.threadPool[i].start();
+		}
+		for ( int i = 0; i < this.POOL_SIZE; i++) {
+			try {
+				this.threadPool[i].join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		for (int i = 2; i < this.POOL_SIZE; i++) {
+			if (this.pool[i].getFitness() > this.SecBest.getFitness()){
+				if(this.pool[i].getFitness() > this.Best.getFitness()){
+					this.Best = this.pool[i];
+				}
+				else {
+					this.SecBest = this.pool[i];
+				}
+			}
+		}
+	}
+	
+	public void printSample(int i) {
+		System.out.println("Here is a state at which the simulation is at right now :");
+		System.out.println("This is the " + i + "th iteration and the Simulation has been running for : " + (System.currentTimeMillis() - this.startTime) + "ms");
+		System.out.println("Here is the best solution so far : ");
+		this.Best.printResult();
+		System.out.print(" and here is its fitness :" + this.Best.getFitness());
+	}
+	
+	public Chromosome getBest() {
+		return this.Best;
 	}
 }

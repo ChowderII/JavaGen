@@ -101,4 +101,12 @@ public class Chromosome {
 	public int Size(){
 		return this.Size;
 	}
+	
+	public void printResult() {
+		System.out.print("[");
+		for (int i = 0; i < this.Size; i++){
+			System.out.print(this.Genes[i] + " ");
+		}
+		System.out.print("]");
+	}
 }
