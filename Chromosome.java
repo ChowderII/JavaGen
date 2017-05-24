@@ -1,116 +1,101 @@
 package gens;
-import java.util.ArrayList;
 
 /*
  * The Chromosome object represents a solution, its genes represent a possible solution
  * while the fitness represent how good is that solution
 */
 public class Chromosome {
-	
-	private int[] Genes;
+
+	private int[] Genome;
 	private int Size;
+	private int NumberGenes;
+	private int SizeGenes;
 	private int Fitness;
 	
 	/*
 	 * The fitness gets calculated as soon as the chromosome is created.
 	 */
-	public Chromosome (int[] genes){
-		this.Genes = genes;
-		this.Size = genes.length;
+	public Chromosome (int NumberGenes, int SizeGenes){ // initialise the chromosome with a random genome, used in creating the pool
+		this.NumberGenes = NumberGenes;
+		this.SizeGenes = SizeGenes;
+		this.Size = NumberGenes*SizeGenes;
+		
+		int[] temp = new int[this.Size];
+		
+		for (int i = 0; i < this.Size; i++){ // random values of 1 or 0
+			temp[i] = (int) Math.random();
+		}
+		
+		this.Genome = temp;
 		this.Fitness = setFitness();
 	}
 	
-	public Chromosome (boolean duplicate, int size, int min, int max) {
-		int[] genes = new int[size];
-		if (duplicate == true) {
-			for (int i = 0; i < size; i++) {
-				genes[i] = (int)(Math.random() * max) + min;
-			}
-		}
-		/*
-		 * To allow the randomness of non repetitive numbers from a range MIN to MAX
-		 * create ArrayList containing MIN to MAX in order, then the algorithm picks
-		 * 
-		 * Manually tested the case where MIN is higher than 0 
-		 * Manually tested the case where MIN is 0
-		 * Manually tested the case where MIN is lower than 0
-		 * 
-		 * As long as the correct size is specified for the formula : MAX - MIN == SIZE - 1; it'll work.
-		 */
-		else {
-			if (max - min != size - 1){
-				System.out.println("The size you entered is invalid for the MAX and MIN you provide, please reboot with proper values. Ex : MAX - MIN == size - 1");
-				System.exit(0);
-			}
-			else {
-			ArrayList<Integer> list = new ArrayList<Integer>();
-			for (int i = min; i <= max; i++) {
-				list.add(new Integer(i));
-			}
-			for (int i = 0; i <= (max-min); i++) {
-				int index = (int) (Math.random() * list.size()) + min;
-				index -= min;
-				genes[i] = list.get(index);
-				list.remove(index);
-			}
-		}
-		this.Genes = genes;
-		this.Size = size;
+	public Chromosome (int[] Genome, int NumberGenes){ // this chromosome is the product of a genetic operator, we already know the genome
+		this.Genome = Genome;
+		this.Size = Genome.length;
+		this.NumberGenes = NumberGenes;
+		this.SizeGenes = Genome.length/NumberGenes;
 		this.Fitness = setFitness();
-		}
-		
 	}
 	
 	/*
 	 * IMPORTANT : change this method to accommodate your specific problem.
 	 * This method is used to calculate the fitness of the solution
-	 * Works best if highest fitness is better
+	 * Works best if perfect fitness is 0
+	 * lower is better
 	 */
-	private int setFitness(){
-		int[] sum = new int[this.Genes.length];
-		int[] sub = new int[this.Genes.length];
+	private int setFitness() { // sets the fitness of the newly created chromosome, can only be called at the creation of the chromosome
+		int[] Genes = getReadableGenome(this.Genome);
 		
-		int fitness = 0;
+		int[] sum = new int[Genes.length];
+		int[] sub = new int[Genes.length];
 		
-		for(int i = 0; i < this.Genes.length; i++){	
-			sum[i] = i + this.Genes[i];
-			sub[i] =  this.Genes[i] - i;
+		int fitness = Genes.length;
+		
+		for(int i = 0; i < Genes.length; i++){	
+			sum[i] = i + Genes[i];
+			sub[i] =  Genes[i] - i;
 		}
 		
-		for(int i = 0; i<this.Genes.length; i++){
-			for(int j = 0; j<this.Genes.length; ++j){
+		for(int i = 0; i<Genes.length; i++){
+			for(int j = 0; j<Genes.length; ++j){
 				if(i == j){j++;}
-				if(j == this.Genes.length){break;}
+				if(j == Genes.length){break;}
 				
 				if(sum[i] == sum[j]){fitness--;}
 				if(sub[i] == sub[j]){fitness--;}
 			}
 		}
 		
-		return fitness/2;
+		return fitness;
 	}
 	
-	/*
-	 * 
-	 */
-	public void mutate(boolean duplicate, int min, int max){
-		if (duplicate){ // duplicates are allowed
-			int temp = (int)(Math.random() * max) + min;
-			int index = (int)(Math.random() * (this.Size-1)) + 0;
-			
-			this.Genes[index] = temp;
+	// converts the stream of bits into a human readable array of integers, can also be useful for setFitness
+	public int[] getReadableGenome(int[] Genome){
+		int[] Genes = new int[this.NumberGenes];
+		int indI = 0;
+		
+		for (int i = 0; i < this.Size; i++){
+			Genes[indI] = (int) Math.pow(2, ((this.SizeGenes-1)-(i%this.SizeGenes)));
+			if(i%this.SizeGenes == 0)
+				indI++;
 		}
-		else { // duplicates are not allowed
-			int index1 = (int)(Math.random() * (this.Size-1)) + 0;
-			int index2 = (int)(Math.random() * (this.Size-1)) + 0;
-			int temp = this.Genes[index1];
-			this.Genes[index1] = this.Genes[index2];
-			this.Genes[index2] = temp;			
+		return Genes;
+	}
+	
+	public void printResult() {
+		int[] g = getReadableGenome(this.Genome);
+		
+		System.out.print("[");
+		for (int i = 0; i < this.Size; i++){
+			if(i==this.Size-1)
+				System.out.print(g[i] + "]");
+			System.out.print(g[i] + " ");
 		}
 	}
 	
-	public int[] getGenes(){
-		return this.Genes;
+	public int[] getGenome(){
+		return this.Genome;
 	}
 	
 	public int getFitness(){
@@ -119,13 +104,5 @@ public class Chromosome {
 	
 	public int Size(){
 		return this.Size;
-	}
-	
-	public void printResult() {
-		System.out.print("[");
-		for (int i = 0; i < this.Size; i++){
-			System.out.print(this.Genes[i] + " ");
-		}
-		System.out.print("]");
 	}
 }
