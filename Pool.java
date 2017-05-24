@@ -61,7 +61,8 @@ public class Pool{
 	 * This method is the one that will in multiple threads, it tries to do everything at once,
 	 * when this method gets called by all the threads, one generation has passed.
 	 */	
-	public void crunch(boolean duplicate, int size, int min, int max) {
+	public void crunch(boolean duplicate, int mutation100, int size, int min, int max) {
+		
 		for (int i = 0; i < this.POOL_SIZE; i++){
 			this.threadPool[i] = new Thread(new MyRunnable(i, this.getChromosome(i), this, duplicate, size, min, max));
 		}
@@ -87,11 +88,17 @@ public class Pool{
 			}
 		}
 	}
+		
+	public void mutate(boolean duplicate, int min, int max) {
+		for (int i = 0; i < this.POOL_SIZE; i++) {
+			this.pool[i].mutate(duplicate, min, max);
+		}
+	}
 	
 	public void printSample(int i) {
-		System.out.println("Here is a state at which the simulation is at right now :");
+		System.out.println("Simulation ended, here is what we found :");
 		System.out.println("This is the " + i + "th iteration and the Simulation has been running for : " + (System.currentTimeMillis() - this.startTime) + "ms");
-		System.out.println("Here is the best solution so far : ");
+		System.out.println("Here is the best solution from this Simulation : ");
 		this.Best.printResult();
 		System.out.print(" and here is its fitness :" + this.Best.getFitness());
 	}

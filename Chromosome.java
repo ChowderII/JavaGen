@@ -90,6 +90,25 @@ public class Chromosome {
 		return fitness/2;
 	}
 	
+	/*
+	 * 
+	 */
+	public void mutate(boolean duplicate, int min, int max){
+		if (duplicate){ // duplicates are allowed
+			int temp = (int)(Math.random() * max) + min;
+			int index = (int)(Math.random() * (this.Size-1)) + 0;
+			
+			this.Genes[index] = temp;
+		}
+		else { // duplicates are not allowed
+			int index1 = (int)(Math.random() * (this.Size-1)) + 0;
+			int index2 = (int)(Math.random() * (this.Size-1)) + 0;
+			int temp = this.Genes[index1];
+			this.Genes[index1] = this.Genes[index2];
+			this.Genes[index2] = temp;			
+		}
+	}
+	
 	public int[] getGenes(){
 		return this.Genes;
 	}
