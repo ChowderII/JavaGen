@@ -1,5 +1,7 @@
 package gens;
 
+import java.util.Random;
+
 /*
  * The Chromosome object represents a solution, its genes represent a possible solution
  * while the fitness represent how good is that solution
@@ -22,8 +24,10 @@ public class Chromosome {
 		
 		int[] temp = new int[this.Size];
 		
+		Random r = new Random();
+		
 		for (int i = 0; i < this.Size; i++){ // random values of 1 or 0
-			temp[i] = (int) Math.random();
+			temp[i] = r.nextInt(2);
 		}
 		
 		this.Genome = temp;
