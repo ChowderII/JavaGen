@@ -22,7 +22,7 @@ public class PoolManager {
 	}
 	
 	public void initPool(){
-		this.p = new Pool(this.POOL_SIZE, this.CHROMOSOME_SIZE);
+		this.p = new Pool(this.POOL_SIZE, this.CHROMOSOME_SIZE, CHROMOSOME_SIZE, CHROMOSOME_SIZE, CHROMOSOME_SIZE, CHROMOSOME_SIZE);
 		p.init(this.DUPLICATE, this.CHROMOSOME_SIZE, this.GENES_MIN, this.GENES_MAX);
 		System.out.println("Pool initiated");
 	}

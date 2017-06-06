@@ -36,10 +36,25 @@ public class Pool{
 	public void crunch (){
 		this.StartTime = System.currentTimeMillis();
 		
-		ArrayList childPopulation = new ArrayList(this.PopSize);
-		
 		for (int i = 0; i < this.Generations; i++) {
+			ArrayList<Chromosome> childPopulation = new ArrayList<Chromosome>(this.PopSize);
 			
+			for(int j = 0; j < this.ThreadNumber; j++){
+				ThreadPool[j] = new Thread(new Breeder(this, childPopulation, j)); // create the threads
+			}
+			for(int j = 0; j < this.ThreadNumber; j++){
+				ThreadPool[j].start(); // start all the threads
+			}
+			for(int j = 0; j < this.ThreadNumber; j++){
+				try {
+					ThreadPool[j].join(); // join all the threads
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			for(int j = 0; j < this.PopSize; j++){
+				this.Population[j] = childPopulation.get(j); // reset the parent pool.
+			}
 		}
 	}
 	

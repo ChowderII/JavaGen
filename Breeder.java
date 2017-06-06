@@ -1,5 +1,6 @@
 package gens;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Breeder implements Runnable{
@@ -7,9 +8,9 @@ public class Breeder implements Runnable{
 	private int id;
 	private Pool p;
 	private Random r;
-	Chromosome[] childPopulation;
+	ArrayList<Chromosome> childPopulation;
 	
-	public Breeder(Pool p, Chromosome[] childPopulation, int id){
+	public Breeder(Pool p, ArrayList<Chromosome> childPopulation, int id){
 		this.id = id;
 		this.p = p;
 		this.r = new Random();
@@ -25,7 +26,7 @@ public class Breeder implements Runnable{
 		
 		child = mutate(child);
 		
-		
+		childPopulation.add(child);
 	}
 	
 	private Chromosome mutate(Chromosome c) {
