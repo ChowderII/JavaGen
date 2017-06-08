@@ -5,13 +5,11 @@ import java.util.Random;
 
 public class Breeder implements Runnable{
 	
-	private int id;
 	private Pool p;
 	private Random r;
 	ArrayList<Chromosome> childPopulation;
 	
-	public Breeder(Pool p, ArrayList<Chromosome> childPopulation, int id){
-		this.id = id;
+	public Breeder(Pool p, ArrayList<Chromosome> childPopulation){
 		this.p = p;
 		this.r = new Random();
 		this.childPopulation = childPopulation;
@@ -55,21 +53,23 @@ public class Breeder implements Runnable{
 	}
 	
 	private Chromosome crossOver(Chromosome p0, Chromosome p1){
-		int[] gene = new int[this.p.getSizeGenes()];
+		int[] gene = new int[this.p.getChromosomeSize()];
 		int selector = r.nextInt(2);
 		int counter = this.p.getSizeGenes();
 		
 		for (int i = 0; i < this.p.getChromosomeSize(); i++) { // simple way to get different genes from two different parents
-			if(counter == 1) {
+			if(counter == 0) {
 				counter = this.p.getSizeGenes();
 				selector = r.nextInt(2);
 			}
 			
 			if (selector == 0){
 				gene[i] = p0.getGenome()[i];
+				counter--;
 			}
 			else {
 				gene[i] = p1.getGenome()[i];
+				counter--;
 			}
 		}
 		

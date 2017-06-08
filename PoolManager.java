@@ -20,7 +20,7 @@ public class PoolManager {
 	
 	public void initPool(){
 		this.p = new Pool(this.ITERATION, this.POOL_SIZE, this.THREAD_NUMBER, this.GENE_NUMBER, this.GENE_SIZE);
-		System.out.println("Pool initiated, starting crunching the numbers.");
+		System.out.println("Pool initiated.");
 	}
 	
 	public void simulation(){
@@ -31,5 +31,9 @@ public class PoolManager {
 		for (i = 0; i < this.ITERATION && this.p.getBest().getFitness() != 0; i++) {
 			this.p.crunch();
 		}
+		System.out.println("Best individual : ");
+		this.p.getBest().printResult();
+		System.out.print(" - Fitness : " + this.p.getBest().getFitness());
+		System.out.println("Simulation time : " + (System.currentTimeMillis() - this.startTime));
 	}
 }

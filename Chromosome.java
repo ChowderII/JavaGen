@@ -93,7 +93,7 @@ public class Chromosome {
 		int[] g = getReadableGenome(this.Genome);
 		
 		System.out.print("[");
-		for (int i = 0; i < this.Size; i++){
+		for (int i = 0; i < this.Size/this.SizeGenes; i++){
 			if(i==this.Size-1)
 				System.out.print(g[i] + "]");
 			System.out.print(g[i] + " ");
