@@ -80,9 +80,11 @@ public class Chromosome {
 		int indI = 0;
 		
 		for (int i = 0; i < this.Size; i++){
-			Genes[indI] = (int) Math.pow(2, ((this.SizeGenes-1)-(i%this.SizeGenes)));
+			Genes[indI] += (int) Math.pow(2, ((this.SizeGenes-1)-(i%this.SizeGenes)));
 			if(i%this.SizeGenes == 0)
+				if(i != 0){
 				indI++;
+		}
 		}
 		return Genes;
 	}
