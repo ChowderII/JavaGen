@@ -28,12 +28,13 @@ public class PoolManager {
 		System.out.println("Simulation started, start time recorded.");
 		
 		int i =0;
-		for (i = 0; i < this.ITERATION && this.p.getBest().getFitness() != 0; i++) {
+		for (i = 0; i < this.ITERATION; i++) {
 			this.p.crunch();
+			System.out.println("Generation " + i + " has passed.");
 		}
 		System.out.println("Best individual : ");
 		this.p.getBest().printResult();
 		System.out.print(" - Fitness : " + this.p.getBest().getFitness());
-		System.out.println("Simulation time : " + (System.currentTimeMillis() - this.startTime));
+		System.out.println("\nSimulation time : " + (System.currentTimeMillis() - this.startTime));
 	}
 }

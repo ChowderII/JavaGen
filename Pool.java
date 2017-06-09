@@ -37,10 +37,9 @@ public class Pool{
 	
 	public void crunch (){		
 
-		ArrayList<Chromosome> childPopulation = new ArrayList<Chromosome>(this.PopSize);
-		for (int i = 0; i < this.Generations; i++) {
-			
-			
+		ArrayList<Chromosome> childPopulation = new ArrayList<Chromosome>();
+				while(childPopulation.size() <= this.PopSize){
+
 				for(int j = 0; j < this.ThreadNumber; j++){
 					ThreadPool[j] = new Thread(new Breeder(this, childPopulation)); // create the threads
 				}
@@ -55,13 +54,10 @@ public class Pool{
 					}
 				}
 			}
-		
-		for(int j = 0; j < this.PopSize; j++){
-			this.Population[j] = childPopulation.get(j); // reset the parent pool.
-		}
-		
-		updateBest();
-		System.out.println("UPDATES WERE MADE");
+			for(int j = 0; j < this.PopSize; j++){
+				this.Population[j] = childPopulation.get(j); // reset the parent pool. error here
+			}
+			updateBest();
 	}
 	
 	private void updateBest() {

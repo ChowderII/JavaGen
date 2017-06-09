@@ -51,6 +51,13 @@ public class Chromosome {
 	private int setFitness() { // sets the fitness of the newly created chromosome, can only be called at the creation of the chromosome
 		int[] Genes = getReadableGenome(this.Genome);
 		
+		//test for duplicates
+		/*int duplicate = 0;
+		
+		for (int i = 0; i<this.NumberGenes; i++){
+			
+		}
+		*/
 		int[] sum = new int[Genes.length];
 		int[] sub = new int[Genes.length];
 		
@@ -76,15 +83,16 @@ public class Chromosome {
 	
 	// converts the stream of bits into a human readable array of integers, can also be useful for setFitness
 	public int[] getReadableGenome(int[] Genome){
-		int[] Genes = new int[this.NumberGenes];
+		int[] Genes = new int[8];
 		int indI = 0;
-		
+		int expo = this.SizeGenes-1;
 		for (int i = 0; i < this.Size; i++){
-			Genes[indI] += (int) Math.pow(2, ((this.SizeGenes-1)-(i%this.SizeGenes)));
-			if(i%this.SizeGenes == 0)
-				if(i != 0){
+			Genes[indI] += (int) Genome[i] * (Math.pow(2,expo));
+			expo--;
+			if(expo == -1){
+				expo = this.SizeGenes-1;
 				indI++;
-		}
+			}
 		}
 		return Genes;
 	}
@@ -93,9 +101,10 @@ public class Chromosome {
 		int[] g = getReadableGenome(this.Genome);
 		
 		System.out.print("[");
-		for (int i = 0; i < this.Size/this.SizeGenes; i++){
-			if(i==this.Size-1)
+		for (int i = 0; i < this.NumberGenes; i++){
+			if(i==this.NumberGenes-1){
 				System.out.print(g[i] + "]");
+				break;}
 			System.out.print(g[i] + " ");
 		}
 	}
