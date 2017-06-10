@@ -10,14 +10,12 @@ public class Pool{
 	private int Generations;
 	private int PopSize;
 	private int ThreadNumber;
-	private long StartTime;
-	private long EndTime;
-	
+
 	//information for the chromosomes inside the pool
 	private int NumberGenes;
 	private int SizeGenes;
 	private int ChromosomeSize;
-	
+
 	public Pool(int Generations, int PopSize, int ThreadNumber, int NumberGenes, int SizeGenes) {
 		this.PopSize = PopSize;  // how many chromosome are in a generations
 		this.Generations = Generations; // how many generations (cycle of a for loop) will the simulation run for
@@ -27,42 +25,43 @@ public class Pool{
 		this.SizeGenes = SizeGenes; // how big are each genes
 		this.Population = new Chromosome[PopSize];
 		this.ThreadPool = new Thread[ThreadNumber];
-		
+
 		for (int i = 0; i < PopSize; i++) {
 			this.Population[i] = new Chromosome(NumberGenes, SizeGenes);
 		}
-		
+
 		updateBest();
 	}
-	
+
 	public void crunch (){		
-
-		ArrayList<Chromosome> childPopulation = new ArrayList<Chromosome>();
-				while(childPopulation.size() <= this.PopSize){
-
-				for(int j = 0; j < this.ThreadNumber; j++){
-					ThreadPool[j] = new Thread(new Breeder(this, childPopulation)); // create the threads
-				}
-				for(int j = 0; j < this.ThreadNumber; j++){
-					ThreadPool[j].start(); // start all the threads
-				}
-				for(int j = 0; j < this.ThreadNumber; j++){
-					try {
-						ThreadPool[j].join(); // join all the threads
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+		ArrayList<Chromosome> childPopulation = new ArrayList<Chromosome>(this.PopSize);
+		
+		while(childPopulation.size() <= this.PopSize){
+			int ind = 0;
+			for(int j = 0; j < this.ThreadNumber || ind == this.PopSize-1; j++){
+				ThreadPool[j] = new Thread(new Breeder(this, childPopulation, ind)); // create the threads
+				ind++;
+			}
+			for(int j = 0; j < this.ThreadNumber; j++){
+				ThreadPool[j].start(); // start all the threads
+			}
+			for(int j = 0; j < this.ThreadNumber; j++){
+				try {
+					ThreadPool[j].join(); // join all the threads
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 			}
-			for(int j = 0; j < this.PopSize; j++){
-				this.Population[j] = childPopulation.get(j); // reset the parent pool. error here
-			}
-			updateBest();
+		}
+		for(int j = 0; j < this.PopSize; j++){
+			this.Population[j] = childPopulation.get(j); // reset the parent pool. error here
+		}
+		updateBest();
 	}
-	
+
 	private void updateBest() {
 		Chromosome temp = this.Population[0];
-		
+
 		for (int j = 1; j < this.PopSize; j++){ // updates the Best chromosome of the pool
 			if (temp.getFitness() < this.Population[j].getFitness()) {
 				temp = this.Population[j];
@@ -70,26 +69,26 @@ public class Pool{
 		}
 		this.Best = temp;
 	}
-	
+
 	public int getPopSize(){
 		return this.PopSize;
 	}
-	
+
 	public Chromosome[] getPopulation(){
 		return this.Population;
 	}
-	
+
 	public Chromosome getBest(){
 		return this.Best;
 	}
-	
+
 	public int getGenerations(){
 		return this.Generations;
 	}
 	public int getThreadNumber(){
 		return this.ThreadNumber;
 	}
-	
+
 	public int getNumberGenes(){
 		return this.NumberGenes;
 	}
@@ -97,7 +96,7 @@ public class Pool{
 	public int getSizeGenes(){
 		return this.SizeGenes;
 	}
-	
+
 	public int getChromosomeSize(){
 		return this.ChromosomeSize;
 	}

@@ -7,11 +7,13 @@ public class Breeder implements Runnable{
 	
 	private Pool p;
 	private Random r;
+	private int index;
 	ArrayList<Chromosome> childPopulation;
 	
-	public Breeder(Pool p, ArrayList<Chromosome> childPopulation){
+	public Breeder(Pool p, ArrayList<Chromosome> childPopulation, int ind){
 		this.p = p;
 		this.r = new Random();
+		this.index = ind;
 		this.childPopulation = childPopulation;
 
 	}
@@ -23,8 +25,12 @@ public class Breeder implements Runnable{
 		Chromosome child = crossOver(parent0, parent1);
 		
 		child = mutate(child);
-		
-		childPopulation.add(child);
+		try{
+		childPopulation.add(this.index, child);
+		}
+		catch(Exception e) {
+			System.out.println(this.index);
+		}
 	}
 	
 	private Chromosome mutate(Chromosome c) {
