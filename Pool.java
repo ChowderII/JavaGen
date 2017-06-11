@@ -33,30 +33,8 @@ public class Pool{
 		updateBest();
 	}
 
-	public void crunch (){		
-		ArrayList<Chromosome> childPopulation = new ArrayList<Chromosome>(this.PopSize);
+	public void crunch (){
 		
-		while(childPopulation.size() <= this.PopSize){
-			int ind = 0;
-			for(int j = 0; j < this.ThreadNumber || ind == this.PopSize-1; j++){
-				ThreadPool[j] = new Thread(new Breeder(this, childPopulation, ind)); // create the threads
-				ind++;
-			}
-			for(int j = 0; j < this.ThreadNumber; j++){
-				ThreadPool[j].start(); // start all the threads
-			}
-			for(int j = 0; j < this.ThreadNumber; j++){
-				try {
-					ThreadPool[j].join(); // join all the threads
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		for(int j = 0; j < this.PopSize; j++){
-			this.Population[j] = childPopulation.get(j); // reset the parent pool. error here
-		}
-		updateBest();
 	}
 
 	private void updateBest() {

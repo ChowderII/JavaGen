@@ -25,12 +25,9 @@ public class Breeder implements Runnable{
 		Chromosome child = crossOver(parent0, parent1);
 		
 		child = mutate(child);
-		try{
+
 		childPopulation.add(this.index, child);
-		}
-		catch(Exception e) {
-			System.out.println(this.index);
-		}
+
 	}
 	
 	private Chromosome mutate(Chromosome c) {

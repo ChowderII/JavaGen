@@ -10,9 +10,9 @@ public class Main {
 		
 		int geneSize = 4;
 		int geneNumber = 8;
-		int iteration = 200;
-		int poolSize = 100;
-		int threadNumber = 16;
+		int iteration = 10;
+		int poolSize = 10;
+		int threadNumber = 3;
 
 		PoolManager pm = new PoolManager(geneSize, geneNumber, poolSize, iteration, threadNumber);
 
