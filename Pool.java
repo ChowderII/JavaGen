@@ -34,14 +34,34 @@ public class Pool{
 	}
 
 	public void crunch (){
+		ArrayList<Chromosome> childs = new ArrayList<Chromosome>();
+
+		while(childs.size() < this.PopSize){
+			for(int i = 0; i< this.ThreadNumber; i++){
+				ThreadPool[i] = new Thread(new Breeder(this, childs));
+			}
+			for(int i = 0; i< this.ThreadNumber; i++){
+				ThreadPool[i].start();
+			}
+			for(int i = 0; i< this.ThreadNumber; i++){
+				try {
+					ThreadPool[i].join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 		
+		this.Population = childs.subList(0, this.PopSize).toArray(this.Population);
+		updateBest();
 	}
 
 	private void updateBest() {
 		Chromosome temp = this.Population[0];
 
 		for (int j = 1; j < this.PopSize; j++){ // updates the Best chromosome of the pool
-			if (temp.getFitness() < this.Population[j].getFitness()) {
+			if (temp.getFitness() > this.Population[j].getFitness()) {
 				temp = this.Population[j];
 			}
 		}

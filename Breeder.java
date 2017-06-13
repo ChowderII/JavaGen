@@ -10,10 +10,9 @@ public class Breeder implements Runnable{
 	private int index;
 	ArrayList<Chromosome> childPopulation;
 	
-	public Breeder(Pool p, ArrayList<Chromosome> childPopulation, int ind){
+	public Breeder(Pool p, ArrayList<Chromosome> childPopulation){
 		this.p = p;
 		this.r = new Random();
-		this.index = ind;
 		this.childPopulation = childPopulation;
 
 	}
@@ -26,8 +25,9 @@ public class Breeder implements Runnable{
 		
 		child = mutate(child);
 
-		childPopulation.add(this.index, child);
-
+		synchronized (this.childPopulation){
+			childPopulation.add(this.index, child);
+		}
 	}
 	
 	private Chromosome mutate(Chromosome c) {

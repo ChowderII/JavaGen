@@ -50,18 +50,31 @@ public class Chromosome {
 	 */
 	private int setFitness() { // sets the fitness of the newly created chromosome, can only be called at the creation of the chromosome
 		int[] Genes = getReadableGenome(this.Genome);
+		int fitness = Genes.length;
+		
 		
 		//test for duplicates
-		/*int duplicate = 0;
-		
 		for (int i = 0; i<this.NumberGenes; i++){
-			
+			for(int j = 0; j < this.NumberGenes; j++){
+				if(i != j){
+					if(Genes[i] == Genes[j]){
+						fitness++;
+					}
+				}	
+			}
 		}
-		*/
+		
+		//test for too high integers
+		for (int i =0; i<Genes.length; i++){
+			if(Genes[i] >= this.NumberGenes){
+				fitness++;
+			}
+		}
+		
 		int[] sum = new int[Genes.length];
 		int[] sub = new int[Genes.length];
 		
-		int fitness = Genes.length;
+		
 		
 		for(int i = 0; i < Genes.length; i++){	
 			sum[i] = i + Genes[i];
