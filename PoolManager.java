@@ -28,7 +28,7 @@ public class PoolManager {
 		System.out.println("Simulation started, start time recorded.");
 		
 		int i =0;
-		for (i = 0; i <= this.ITERATION || this.p.getBest().getFitness() != 0; i++) {
+		for (i = 0; i <= this.ITERATION; i++) {
 			this.p.crunch();
 			if(i%100 == 0){
 				System.out.println("Generation " + i + " has passed.");

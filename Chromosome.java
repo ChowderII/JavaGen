@@ -66,7 +66,8 @@ public class Chromosome {
 			for(int j = 0; j<Genes.length; ++j){
 				if(i == j){j++;}
 				if(j == Genes.length){break;}
-				if(Genes[j] == Genes[i] || Genes[j] > Genes.length){break;} // testing for duplicates and numbers too high
+				if(Genes[j] == Genes[i]){fitness++;break;} // testing for duplicate numbers
+				if(Genes[j] >= Genes.length){fitness++;break;} // testing for numbers too high
 				
 				if(sum[i] == sum[j]){fitness--;}
 				if(sub[i] == sub[j]){fitness--;}
