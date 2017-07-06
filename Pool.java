@@ -36,7 +36,7 @@ public class Pool{
 	public void crunch (){
 		ArrayList<Chromosome> childs = new ArrayList<Chromosome>();
 
-		while(childs.size() < this.PopSize){
+		while(childs.size() < Math.ceil((double)this.PopSize/2)){
 			for(int i = 0; i< this.ThreadNumber; i++){
 				ThreadPool[i] = new Thread(new Breeder(this, childs));
 			}
@@ -51,6 +51,10 @@ public class Pool{
 					e.printStackTrace();
 				}
 			}
+		}
+		
+		while (childs.size() < this.PopSize){
+			childs.add(new Chromosome(this.NumberGenes, this.SizeGenes));
 		}
 		
 		this.Population = childs.subList(0, this.PopSize).toArray(this.Population);

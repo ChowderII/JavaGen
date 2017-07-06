@@ -23,7 +23,9 @@ public class Breeder implements Runnable{
 		
 		Chromosome child = crossOver(parent0, parent1);
 		
-		child = mutate(child);
+		if(child.getFitness() != 0){
+			child = mutate(child);
+		}
 
 		synchronized (this.childPopulation){
 			childPopulation.add(this.index, child);

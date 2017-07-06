@@ -50,7 +50,7 @@ public class Chromosome {
 	 */
 	private int setFitness() { // sets the fitness of the newly created chromosome, can only be called at the creation of the chromosome
 		int[] Genes = getReadableGenome(this.Genome);
-		int fitness = Genes.length;
+		int fitness = 0;
 
 		
 		int[] sum = new int[Genes.length];
@@ -60,17 +60,28 @@ public class Chromosome {
 		for(int i = 0; i < Genes.length; i++){	
 			sum[i] = i + Genes[i];
 			sub[i] =  Genes[i] - i;
+			
+			if(Genes[i] >= Genes.length){ // adds 1 to fitness for every gene bigger than the max value
+				fitness+=2;
+			}
 		}
 		
-		for(int i = 0; i<Genes.length; i++){
+		for(int i = 0; i<Genes.length; i++){ // will add 2 for every pair of duplicates found in the genome, also takes care of horizontal collisions
+			for(int j = 0; j<Genes.length; ++j){
+				if (Genes[i] == Genes[j] && j != i){
+					fitness+=2;
+				}
+			}
+		}
+		
+		
+		for(int i = 0; i<Genes.length; i++){ // tests for diagonal collision but will ignore columns with too high numbers
 			for(int j = 0; j<Genes.length; ++j){
 				if(i == j){j++;}
 				if(j == Genes.length){break;}
-				if(Genes[j] == Genes[i]){fitness++;break;} // testing for duplicate numbers
-				if(Genes[j] >= Genes.length){fitness++;break;} // testing for numbers too high
 				
-				if(sum[i] == sum[j]){fitness--;}
-				if(sub[i] == sub[j]){fitness--;}
+				if(sum[i] == sum[j] && (Genes[i] < Genes.length || Genes[j] < Genes.length)){fitness++;}
+				if(sub[i] == sub[j] && (Genes[i] < Genes.length || Genes[j] < Genes.length)){fitness++;}
 			}
 		}
 		
